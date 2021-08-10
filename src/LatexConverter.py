@@ -10,9 +10,9 @@ class LatexConverter():
 
     logger = LoggingServer.getInstance()
     
-    def __init__(self, preambleManager, userOptionsManager):
+    def __init__(self, preambleManager):
          self._preambleManager = preambleManager
-         self._userOptionsManager = userOptionsManager
+         #self._userOptionsManager = userOptionsManager
 
     def extractBoundingBox(self, dpi, pathToPdf):
         try:
@@ -62,7 +62,7 @@ class LatexConverter():
         
     def pdflatex(self, fileName):
         try:
-            check_output(['pdflatex', "-interaction=nonstopmode", "-output-directory", 
+            check_output(['xelatex', "-interaction=nonstopmode", "-output-directory", 
                     "build", fileName], stderr=STDOUT, timeout=5)
         except CalledProcessError as inst:
             with open(fileName[:-3]+"log", "r") as f:
@@ -98,9 +98,9 @@ class LatexConverter():
             fileString = expression
         else:
             try:
-                preamble = self._preambleManager.getPreambleFromDatabase(userId)
-                self.logger.debug("Preamble for userId %d found", userId)
-            except KeyError:
+            #    preamble = self._preambleManager.getPreambleFromDatabase(userId)
+            #    self.logger.debug("Preamble for userId %d found", userId)
+            #except KeyError:
                 self.logger.debug("Preamble for userId %d not found, using default preamble", userId)
                 preamble = self._preambleManager.getDefaultPreamble()
             finally:
@@ -109,7 +109,7 @@ class LatexConverter():
         with open("build/expression_file_%s.tex"%sessionId, "w+") as f:
             f.write(fileString)
         
-        dpi = self._userOptionsManager.getDpiOption(userId)
+        dpi = 300 # self._userOptionsManager.getDpiOption(userId) default
         
         try:
             self.pdflatex("build/expression_file_%s.tex"%sessionId)

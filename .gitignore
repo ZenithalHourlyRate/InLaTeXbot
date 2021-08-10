@@ -3,3 +3,5 @@ build/*
 *checkpoints
 *.ipynb
 log/*
+venv/
+main.py

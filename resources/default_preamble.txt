@@ -1,4 +1,4 @@
-\documentclass{article}
+\documentclass{ctexart}
 \usepackage[a6paper]{geometry}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
@@ -12,3 +12,4 @@
 \usepackage{lipsum}
 \pagenumbering{gobble}
 
+\setCJKmainfont{Source Han Serif SC}

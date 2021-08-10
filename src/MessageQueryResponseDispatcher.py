@@ -15,28 +15,28 @@ class MessageQueryResponseDispatcher():
         self._latexConverter = latexConverter
         self._resourceManager = resourceManager
             
-    def dispatchMessageQueryResponse(self, message):
+    def dispatchMessageQueryResponse(self, message, context):
         
         self.logger.debug("Received message: "+message.text+\
                    ", id: "+str(message.message_id)+", from: "+str(message.chat.id))
                                 
-        responder = Process(target = self.respondToMessageQuery, args=[message])
+        responder = Process(target = self.respondToMessageQuery, args=[message, context])
         responder.start()
         Thread(target=self.joinProcess, args=[responder]).start()
             
     def joinProcess(self, process):
         process.join()
 
-    def respondToMessageQuery(self, message):
+    def respondToMessageQuery(self, message, context):
         senderId = message.from_user.id
         chatId = message.chat.id
         messageId = message.message_id
-        expression = message.text
+        expression = ' '.join(context.args)
         
         errorMessage = None
         try:
             imageStream, pdfStream = self._latexConverter.convertExpression(expression, senderId, str(messageId) + str(senderId), returnPdf=True)
-            self._bot.sendDocument(chatId, pdfStream, filename="expression.pdf")
+            #self._bot.sendDocument(chatId, pdfStream, filename="expression.pdf")
             self._bot.sendPhoto(chatId, imageStream)
         except ValueError as err:
             errorMessage = self.getWrongSyntaxResult(expression, err.args[0])
