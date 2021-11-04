@@ -1,0 +1,14 @@
+from telegram.ext import Updater
+
+from src.InLaTeXbot import InLaTeXbot
+
+token = ''
+REQUEST_KWARGS={
+    # "USERNAME:PASSWORD@" is optional, if you need authentication:
+    #'proxy_url': '',
+}
+
+updater = Updater(token=token, use_context=True, request_kwargs=REQUEST_KWARGS)
+
+bot = InLaTeXbot(updater)
+bot.launch()
